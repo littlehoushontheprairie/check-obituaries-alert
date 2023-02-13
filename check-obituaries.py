@@ -10,7 +10,6 @@ FASTMAIL_FROM = os.environ.get('FASTMAIL_FROM')
 FASTMAIL_TO = os.environ.get('FASTMAIL_TO')
 FASTMAIL_TO_GREETING = os.environ.get('FASTMAIL_TO_GREETING')
 
-TIMEZONE = os.environ.get('TZ')
 LAST_NAMES = os.environ.get('LAST_NAMES')
 
 NO_RESULTS_TEMPLATE = 'Your search for "<span style=\'color:#FD6717\'>{}</span>" did not find any obituaries in this newspaper.'
@@ -123,7 +122,7 @@ def job():
         logging.info('Job finished.')
 
 
-schedule.every().day.at("10:30", TIMEZONE).do(job)
+schedule.every().day.at('15:00').do(job)
 
 while True:
     schedule.run_pending()
