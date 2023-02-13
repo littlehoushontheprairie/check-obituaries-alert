@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+  check_obituaries:
+    container_name: check_obituaries
+    image: 'check_obituaries/check_obituaries:latest'
+    restart: unless-stopped
+    network_mode: host
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    environment:
+      TZ: America/Los_Angeles
+      FASTMAIL_TOKEN: '${FASTMAIL_TOKEN}'
+      FASTMAIL_FROM: '${FASTMAIL_FROM}'
+      FASTMAIL_TO: '${FASTMAIL_TO}'
+      FASTMAIL_TO_GREETING: '${FASTMAIL_TO_GREETING}'
+      NAMES: '${NAMES}'
