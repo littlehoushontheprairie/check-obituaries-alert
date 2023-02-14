@@ -51,7 +51,7 @@ def sendEmail(lastName, searchUrl):
 
     A member from the {} family has passed away.
         
-    Here is the search results:
+    Here are the search results:
     {}
 
     ---
