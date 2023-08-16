@@ -2,9 +2,10 @@ FROM python:latest
 
 WORKDIR /usr/src/app
 
-COPY check-obituaries.py .
-COPY tiny_jmap_library.py .
-RUN chmod 0755 check-obituaries.py tiny_jmap_library.py
+COPY check_obituaries.py .
+COPY smtp.py .
+COPY email_templates.py .
+RUN chmod 0755 check_obituaries.py smtp.py email_templates.py
 RUN pip install requests schedule
 
-CMD [ "python", "./check-obituaries.py" ]
+CMD [ "python", "./check_obituaries.py" ]
