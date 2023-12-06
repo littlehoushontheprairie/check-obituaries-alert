@@ -23,15 +23,18 @@ The script reads in email templates everytime it is ran. You can customize the t
 
 ## Environment Variables
 
-| Variable       | Required | Default | Example                        | Needed by                     |
-| -------------- | -------- | ------- | ------------------------------ | ----------------------------- |
-| LAST_NAMES     | true     | ---     | Smith,Ford,James               | Legacy Obituary Website       |
-| FROM_EMAIL     | true     | ---     | from@example.com               | SMTP Server (send email from) |
-| TO_EMAIL       | true     | ---     | to@example.com                 | SMTP Server (send email to)   |
-| EMAIL_GREETING | true     | ---     | Laura                          | Template                      |
-| SMTP_URL       | true     | ---     | smtp.example.com               | SMTP Server                   |
-| SMTP_PORT      | true     | ---     | 465                            | SMTP Server                   |
-| SMTP_EMAIL     | true     | ---     | laura@example.com              | SMTP Server                   |
-| SMTP_PASSWORD  | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                   |
+| Variable          | Required | Default | Example                        | Needed by                                |
+| ----------------- | -------- | ------- | ------------------------------ | ---------------------------------------- |
+| FROM_EMAIL        | true     | ---     | from@example.com               | SMTP Server (send email from)            |
+| TO_EMAIL          | true     | ---     | to@example.com                 | SMTP Server (send email to)              |
+| EMAIL_GREETING    | true     | ---     | Laura                          | Template                                 |
+| SMTP_URL          | true     | ---     | smtp.example.com               | SMTP Server                              |
+| SMTP_PORT         | true     | ---     | 465                            | SMTP Server                              |
+| SMTP_EMAIL        | true     | ---     | laura@example.com              | SMTP Server                              |
+| SMTP_PASSWORD     | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                              |
+| LEGACY_CITY_ID    | true     | ---     | 125138                         | [Legacy.com API](https://www.legacy.com) |
+| LEGACY_REGION_ID  | true     | ---     | 29                             | [Legacy.com API](https://www.legacy.com) |
+| LEGACY_COUNTRY_ID | true     | ---     | 1                              | [Legacy.com API](https://www.legacy.com) |
+| LEGACY_LAST_NAMES | true     | ---     | Smith,Ford,James               | [Legacy.com API](https://www.legacy.com) |
 
 **NOTE:** For security purposes, it is strong recommended that you use a generated API passwords.
