@@ -20,7 +20,7 @@ The script reads in a json file, [legacy_com_search_parameters.json](./legacy_co
 
 Inside the JSON file, it should be laid as such. Keep in mind that each object in the `searchParameters` only requires either `firstName` or `lastName` to search for a refine search add as many as you need.
 
-```
+```json
 {
     "searchParameters": [
         {
