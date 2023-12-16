@@ -4,7 +4,7 @@ import schedule
 import time
 from smtp import SMTP
 from email_templates import EmailTemplates
-from legacy_com_api import LegacyComApi, LegacyComApiError
+from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingParameterError
 
 FROM_EMAIL = os.environ.get('FROM_EMAIL')
 TO_EMAIL = os.environ.get('TO_EMAIL')
@@ -13,10 +13,6 @@ SMTP_URL = os.environ.get('SMTP_URL')
 SMTP_PORT = os.environ.get('SMTP_PORT')
 SMTP_EMAIL = os.environ.get('SMTP_EMAIL')
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
-LEGACY_CITY_ID = os.environ.get("LEGACY_CITY_ID")
-LEGACY_REGION_ID = os.environ.get("LEGACY_REGION_ID")
-LEGACY_COUNTRY_ID = os.environ.get("LEGACY_COUNTRY_ID")
-LEGACY_LAST_NAMES = os.environ.get('LEGACY_LAST_NAMES')
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
@@ -28,8 +24,7 @@ def job():
     smtp = SMTP(smtp_url=SMTP_URL, smtp_port=SMTP_PORT,
                 smtp_email=SMTP_EMAIL, smtp_password=SMTP_PASSWORD)
     email_templates = EmailTemplates()
-    legacyComApi = LegacyComApi(city_id=LEGACY_CITY_ID, region_id=LEGACY_REGION_ID,
-                                country_id=LEGACY_COUNTRY_ID, last_names_comma_delimited=LEGACY_LAST_NAMES)
+    legacyComApi = LegacyComApi()
 
     try:
         obituaries = legacyComApi.call()
@@ -54,11 +49,14 @@ def job():
                         subject=subject, body=body)
         logging.error(
             "An error has occurred when making Legacy.com api call. API returned status code: {}".format(error.args[1]))
+    except LegacyComApiMissingParameterError as error:
+        logging.error("Legacy.com API requires a first name or last name.")
 
     logging.info('Job finished.')
 
 
-schedule.every().day.at("15:00").do(job)
+# schedule.every().day.at("15:00").do(job)
+schedule.every(30).seconds.do(job)
 
 while True:
     schedule.run_pending()

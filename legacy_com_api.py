@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 import requests
+import json
 
 """
 Legacy.com API
@@ -15,39 +16,62 @@ cityId - City ID.
 """
 
 USER_AGENT = "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1"
-LEGACY_COM_API_URL = "https://www.legacy.com/api/_frontend/search?cityIdList={city_id}&regionIdList={region_id}&countryIdList={country_id}&endDate={today}&firstName=&keyword=&lastName={last_name}&limit=50&noticeType=all&session_id=&startDate={yesterday}"
+LEGACY_COM_API_BASE_URL = "https://www.legacy.com/api/_frontend/search?endDate={today}&firstName={first_name}&keyword=&lastName={last_name}&limit=50&noticeType=all&session_id=&startDate=2002-02-02"
 
 
 class LegacyComApiError(Exception):
     pass
 
 
+class LegacyComApiMissingParameterError(Exception):
+    pass
+
+
 class LegacyComApi:
-    def __init__(self, city_id, region_id, country_id, last_names_comma_delimited):
-        assert len(city_id) > 0 and city_id.isnumeric()
-        assert len(region_id) > 0 and region_id.isnumeric()
-        assert len(country_id) > 0 and country_id.isnumeric()
-        assert len(last_names_comma_delimited) > 0
+    def __init__(self):
+        data = {}
+
+        with open("legacy_com_search_parameters.json", "r") as json_data:
+            data = json.load(json_data)
+
+        searchParameters = data["searchParameters"]
 
         today = date.today().isoformat()
         yesterday = date.today() - timedelta(days=1)
-        last_names = last_names_comma_delimited.split(",")
 
         self.legacy_com_api_entries = []
 
-        for last_name in last_names:
+        for searchParameter in searchParameters:
             legacy_com_api_entry = {}
-            legacy_com_api_entry["last_name"] = last_name
-            legacy_com_api_entry["constructed_legacy_url"] = LEGACY_COM_API_URL.format(
-                city_id=city_id,
-                region_id=region_id,
-                country_id=country_id,
-                last_name=last_name,
-                today=today,
-                yesterday=yesterday
-            )
 
-            self.legacy_com_api_entries.append(legacy_com_api_entry)
+            if searchParameter.get("firstName", None) is not None or searchParameter.get("lastName", None) is not None:
+                legacy_com_api_entry["constructed_legacy_url"] = LEGACY_COM_API_BASE_URL.format(
+                    first_name=searchParameter.get("firstName", ""),
+                    last_name=searchParameter.get("lastName", ""),
+                    today=today,
+                    yesterday=yesterday
+                )
+
+                if searchParameter.get("countryId", None) is not None:
+                    legacy_com_api_entry["constructed_legacy_url"] = legacy_com_api_entry["constructed_legacy_url"] + \
+                        "&countryIdList=" + \
+                        str(searchParameter.get("countryId", ""))
+
+                if searchParameter.get("regionId", None) is not None:
+                    legacy_com_api_entry["constructed_legacy_url"] = legacy_com_api_entry["constructed_legacy_url"] + \
+                        "&regionIdList=" + \
+                        str(searchParameter.get("regionId", ""))
+
+                if searchParameter.get("cityId", None) is not None:
+                    legacy_com_api_entry["constructed_legacy_url"] = legacy_com_api_entry["constructed_legacy_url"] + \
+                        "&cityIdList=" + str(searchParameter.get("cityId", ""))
+
+                print(legacy_com_api_entry["constructed_legacy_url"])
+
+                self.legacy_com_api_entries.append(legacy_com_api_entry)
+            else:
+                raise LegacyComApiMissingParameterError(
+                    "Legacy.com API has entered an en error.", "Legacy.com API requires a first name or last name.")
 
     def call(self):
         obituaries = []

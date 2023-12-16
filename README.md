@@ -12,6 +12,36 @@ Need something that notifies you when people die? This script is will check lega
 3. run docker-compose
     - `docker-compose up --build -d`
 
+## Legacy.com API
+
+The script reads in a json file, [legacy_com_search_parameters.json](./legacy_com_search_parameters.json), which is a json object of names and location ids. Legacy.com API doesn't require all fields to be filled in. At least some need to be.
+
+### Structure
+
+Inside the JSON file, it should be laid as such. Keep in mind that each object in the `searchParameters` only requires either `firstName` or `lastName` to search for a refine search add as many as you need.
+
+```
+{
+    "searchParameters": [
+        {
+            "firstName": "John",
+            "lastName": "Smith",
+            "countryId": 1,
+            "regionId": 29,
+            "cityId": 125138
+        }
+    ]
+}
+```
+
+`countryId`, `regionId`, and `cityId` can be found on the [Legacy.com](https://www.legacy.com) site, but here are some direct information:
+
+-   `countryId` - Country ID (i.e. 1 - United States)
+-   `regionId` - Region ID. These are states or provinces. (i.e. 29 - New York)
+    -   This can be found with this endpoint: https://www.legacy.com/api/_frontend/regions/country/united-states
+-   `cityId` - City ID. (i.e. 125138 - New York City)
+    -   This can be found with this endpoint: https://www.legacy.com/api/_frontend/cities/region/{regionId}
+
 ## Email Templates
 
 The script reads in email templates everytime it is ran. You can customize the templates located in the _templates_ folder. They are read in as HTML files and are injected at runtime with the information.
@@ -23,18 +53,14 @@ The script reads in email templates everytime it is ran. You can customize the t
 
 ## Environment Variables
 
-| Variable          | Required | Default | Example                        | Needed by                                |
-| ----------------- | -------- | ------- | ------------------------------ | ---------------------------------------- |
-| FROM_EMAIL        | true     | ---     | from@example.com               | SMTP Server (send email from)            |
-| TO_EMAIL          | true     | ---     | to@example.com                 | SMTP Server (send email to)              |
-| EMAIL_GREETING    | true     | ---     | Laura                          | Template                                 |
-| SMTP_URL          | true     | ---     | smtp.example.com               | SMTP Server                              |
-| SMTP_PORT         | true     | ---     | 465                            | SMTP Server                              |
-| SMTP_EMAIL        | true     | ---     | laura@example.com              | SMTP Server                              |
-| SMTP_PASSWORD     | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                              |
-| LEGACY_CITY_ID    | true     | ---     | 125138                         | [Legacy.com API](https://www.legacy.com) |
-| LEGACY_REGION_ID  | true     | ---     | 29                             | [Legacy.com API](https://www.legacy.com) |
-| LEGACY_COUNTRY_ID | true     | ---     | 1                              | [Legacy.com API](https://www.legacy.com) |
-| LEGACY_LAST_NAMES | true     | ---     | Smith,Ford,James               | [Legacy.com API](https://www.legacy.com) |
+| Variable       | Required | Default | Example                        | Needed by                     |
+| -------------- | -------- | ------- | ------------------------------ | ----------------------------- |
+| FROM_EMAIL     | true     | ---     | from@example.com               | SMTP Server (send email from) |
+| TO_EMAIL       | true     | ---     | to@example.com                 | SMTP Server (send email to)   |
+| EMAIL_GREETING | true     | ---     | Laura                          | Template                      |
+| SMTP_URL       | true     | ---     | smtp.example.com               | SMTP Server                   |
+| SMTP_PORT      | true     | ---     | 465                            | SMTP Server                   |
+| SMTP_EMAIL     | true     | ---     | laura@example.com              | SMTP Server                   |
+| SMTP_PASSWORD  | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                   |
 
 **NOTE:** For security purposes, it is strong recommended that you use a generated API passwords.
