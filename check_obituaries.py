@@ -6,21 +6,22 @@ from smtp import SMTP
 from email_templates import EmailTemplates
 from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingParameterError
 
-FROM_EMAIL = os.environ.get('FROM_EMAIL')
-TO_EMAIL = os.environ.get('TO_EMAIL')
-EMAIL_GREETING = os.environ.get('EMAIL_GREETING')
-SMTP_URL = os.environ.get('SMTP_URL')
-SMTP_PORT = os.environ.get('SMTP_PORT')
-SMTP_EMAIL = os.environ.get('SMTP_EMAIL')
-SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+SCRIPT_RUN_TIME = os.environ.get("SCRIPT_RUN_TIME", "13:00")
+FROM_EMAIL = os.environ.get("FROM_EMAIL")
+TO_EMAIL = os.environ.get("TO_EMAIL")
+EMAIL_GREETING = os.environ.get("EMAIL_GREETING")
+SMTP_URL = os.environ.get("SMTP_URL")
+SMTP_PORT = os.environ.get("SMTP_PORT")
+SMTP_EMAIL = os.environ.get("SMTP_EMAIL")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-                    level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(format="%(asctime)s %(levelname)-8s %(message)s",
+                    level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
 
 def job():
-    logging.info('Running job...')
+    logging.info("Running job...")
     smtp = SMTP(smtp_url=SMTP_URL, smtp_port=SMTP_PORT,
                 smtp_email=SMTP_EMAIL, smtp_password=SMTP_PASSWORD)
     email_templates = EmailTemplates()
@@ -52,11 +53,10 @@ def job():
     except LegacyComApiMissingParameterError as error:
         logging.error("Legacy.com API requires a first name or last name.")
 
-    logging.info('Job finished.')
+    logging.info("Job finished.")
 
 
-# schedule.every().day.at("15:00").do(job)
-schedule.every(30).seconds.do(job)
+schedule.every().day.at(SCRIPT_RUN_TIME).do(job)
 
 while True:
     schedule.run_pending()

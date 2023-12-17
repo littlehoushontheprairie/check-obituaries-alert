@@ -31,7 +31,7 @@ class LegacyComApi:
     def __init__(self):
         data = {}
 
-        with open("legacy_com_search_parameters.json", "r") as json_data:
+        with open("/data/legacy_com_search_parameters.json", "r") as json_data:
             data = json.load(json_data)
 
         searchParameters = data["searchParameters"]

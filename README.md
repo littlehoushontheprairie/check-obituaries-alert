@@ -1,6 +1,6 @@
 # Check Obituaries
 
-Need something that notifies you when people die? This script is will check legacy.com every 24 hours for a new obituary against a list of names which is passed in as a json string. Once one found, an email will be sent.
+Need something that notifies you when they appear in an obituary? This script is will check legacy.com every 24 hours (default is 13:00) for a new obituary against a list of names which is passed in as a json string. Once one found, an email will be sent.
 
 ## Setup
 
@@ -14,7 +14,7 @@ Need something that notifies you when people die? This script is will check lega
 
 ## Legacy.com API
 
-The script reads in a json file, [legacy_com_search_parameters.json](./legacy_com_search_parameters.json), which is a json object of names and location ids. Legacy.com API doesn't require all fields to be filled in. At least some need to be.
+The script reads in a json file, [legacy_com_search_parameters.json](./legacy_com_search_parameters.json), which is a json object of names and location ids. The file should be located in `/data` and mapped correctly in the [docker-compose.yml](./docker-compose.yml#L25). Legacy.com API doesn't require all fields to be filled in. At least some need to be.
 
 ### Structure
 
@@ -53,14 +53,15 @@ The script reads in email templates everytime it is ran. You can customize the t
 
 ## Environment Variables
 
-| Variable       | Required | Default | Example                        | Needed by                     |
-| -------------- | -------- | ------- | ------------------------------ | ----------------------------- |
-| FROM_EMAIL     | true     | ---     | from@example.com               | SMTP Server (send email from) |
-| TO_EMAIL       | true     | ---     | to@example.com                 | SMTP Server (send email to)   |
-| EMAIL_GREETING | true     | ---     | Laura                          | Template                      |
-| SMTP_URL       | true     | ---     | smtp.example.com               | SMTP Server                   |
-| SMTP_PORT      | true     | ---     | 465                            | SMTP Server                   |
-| SMTP_EMAIL     | true     | ---     | laura@example.com              | SMTP Server                   |
-| SMTP_PASSWORD  | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                   |
+| Variable        | Required | Default | Example                        | Needed by                     |
+| --------------- | -------- | ------- | ------------------------------ | ----------------------------- |
+| SCRIPT_RUN_TIME | false    | 13:00   | 00:00 - 23:59                  | Scheduler                     |
+| FROM_EMAIL      | true     | ---     | from@example.com               | SMTP Server (send email from) |
+| TO_EMAIL        | true     | ---     | to@example.com                 | SMTP Server (send email to)   |
+| EMAIL_GREETING  | true     | ---     | Laura                          | Template                      |
+| SMTP_URL        | true     | ---     | smtp.example.com               | SMTP Server                   |
+| SMTP_PORT       | true     | ---     | 465                            | SMTP Server                   |
+| SMTP_EMAIL      | true     | ---     | laura@example.com              | SMTP Server                   |
+| SMTP_PASSWORD   | true     | ---     | 8f5cd6729h0v5d247vc190ddcs4l2a | SMTP Server                   |
 
 **NOTE:** For security purposes, it is strong recommended that you use a generated API passwords.
