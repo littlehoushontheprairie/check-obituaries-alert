@@ -1,4 +1,4 @@
-# Check Obituaries
+# Check Obituaries Script
 
 Need something that notifies you when they appear in an obituary? This script is will check legacy.com every 24 hours (default is 13:00) for a new obituary against a list of names which is passed in as a json string. Once one found, an email will be sent.
 
