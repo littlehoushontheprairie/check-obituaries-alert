@@ -6,14 +6,14 @@ from smtp import SMTP
 from email_templates import EmailTemplates
 from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingParameterError
 
-SCRIPT_RUN_TIME = os.environ.get("SCRIPT_RUN_TIME", "13:00")
-FROM_EMAIL = os.environ.get("FROM_EMAIL")
-TO_EMAIL = os.environ.get("TO_EMAIL")
-EMAIL_GREETING = os.environ.get("EMAIL_GREETING")
-SMTP_URL = os.environ.get("SMTP_URL")
-SMTP_PORT = os.environ.get("SMTP_PORT")
-SMTP_EMAIL = os.environ.get("SMTP_EMAIL")
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
+SCRIPT_RUN_TIME: str = os.environ.get("SCRIPT_RUN_TIME", "13:00")
+FROM_EMAIL: str = os.environ.get("FROM_EMAIL", "")
+TO_EMAIL: str = os.environ.get("TO_EMAIL", "")
+EMAIL_GREETING: str = os.environ.get("EMAIL_GREETING", "")
+SMTP_URL: str = os.environ.get("SMTP_URL", "")
+SMTP_PORT: str = os.environ.get("SMTP_PORT", "")
+SMTP_EMAIL: str = os.environ.get("SMTP_EMAIL", "")
+SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD", "")
 
 # Enable logging
 logging.basicConfig(format="%(asctime)s %(levelname)-8s %(message)s",
@@ -22,29 +22,27 @@ logging.basicConfig(format="%(asctime)s %(levelname)-8s %(message)s",
 
 def job():
     logging.info("Running job...")
-    smtp = SMTP(smtp_url=SMTP_URL, smtp_port=SMTP_PORT,
-                smtp_email=SMTP_EMAIL, smtp_password=SMTP_PASSWORD)
-    email_templates = EmailTemplates()
-    legacyComApi = LegacyComApi()
+    smtp: SMTP = SMTP(smtp_url=SMTP_URL, smtp_port=SMTP_PORT,
+                      smtp_email=SMTP_EMAIL, smtp_password=SMTP_PASSWORD)
+    email_templates: EmailTemplates = EmailTemplates()
+    legacyComApi: LegacyComApi = LegacyComApi()
 
     try:
-        obituaries = legacyComApi.call()
-
-        if len(obituaries) == 0:
+        if len(legacyComApi.obituaries) == 0:
             logging.info("No new obituaries were found.")
         else:
-            subject = "{} obituaries have been found.".format(
-                str(len(obituaries)))
-            body = email_templates.generate_basic_template(
+            subject: str = "{} obituaries have been found.".format(
+                str(len(legacyComApi.obituaries)))
+            body: str = email_templates.generate_basic_template(
                 dict(email_greeting=EMAIL_GREETING, obituaries=email_templates.generate_obituaries_body(
-                    obituaries)))
+                    legacyComApi.obituaries)))
             smtp.send_email(from_email=FROM_EMAIL,
                             to_email=TO_EMAIL, subject=subject, body=body)
             logging.info(subject)
 
     except LegacyComApiError as error:
-        subject = "check-obituaries.py encountered an error from Legacy.com"
-        body = email_templates.generate_error_template(
+        subject: str = "check-obituaries.py encountered an error from Legacy.com"
+        body: str = email_templates.generate_error_template(
             dict(email_greeting=EMAIL_GREETING, status_code=error.args[1]))
         smtp.send_email(from_email=FROM_EMAIL, to_email=TO_EMAIL,
                         subject=subject, body=body)
