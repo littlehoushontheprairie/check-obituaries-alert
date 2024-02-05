@@ -1,13 +1,13 @@
-# Check Obituaries Script
+# Check Obituaries Alert
 
-Need something that notifies you when they appear in an obituary? This script is will check legacy.com every 24 hours (default is 13:00) for a new obituary against a list of names which is passed in as a json string. Once one found, an email will be sent.
+Need something that alerts you when they appear in an obituary? This script is will check legacy.com every 24 hours (default is 13:00) for a new obituary against a list of names which is passed in as a json string. Once one found, an email will be sent.
 
 ## Setup
 
 1. Download repo
     - `git checkout develop`
     - `git pull`
-    - `cd check-obituaries`
+    - `cd check-obituaries-alert`
 2. Export environment variables
 3. run docker-compose
     - `docker-compose up --build -d`

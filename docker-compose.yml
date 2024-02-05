@@ -2,8 +2,8 @@ version: "3.5"
 
 services:
   check_obituaries:
-    container_name: check_obituaries
-    image: "littlehoushontheprairie/check_obituaries:latest"
+    container_name: check_obituaries_alert
+    image: "littlehoushontheprairie/check_obituaries_alert:latest"
     restart: always
     network_mode: host
     build:
