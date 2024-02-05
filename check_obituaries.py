@@ -2,17 +2,18 @@ import os
 import logging
 import schedule
 import time
-from smtp import SMTP
+from smtp import SMTP, Email, SMTPOptions
 from email_templates import EmailTemplates
 from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingParameterError
 
 SCRIPT_RUN_TIME: str = os.environ.get("SCRIPT_RUN_TIME", "13:00")
+FROM_NAME: str = os.environ.get("FROM_NAME", "Check Obituary Script")
 FROM_EMAIL: str = os.environ.get("FROM_EMAIL", "")
+TO_NAME: str = os.environ.get("TO_NAME", "")
 TO_EMAIL: str = os.environ.get("TO_EMAIL", "")
-EMAIL_GREETING: str = os.environ.get("EMAIL_GREETING", "")
-SMTP_URL: str = os.environ.get("SMTP_URL", "")
-SMTP_PORT: str = os.environ.get("SMTP_PORT", "")
-SMTP_EMAIL: str = os.environ.get("SMTP_EMAIL", "")
+SMTP_HOST: str = os.environ.get("SMTP_HOST", "")
+SMTP_PORT: int = os.environ.get("SMTP_PORT", 465)
+SMTP_USER: str = os.environ.get("SMTP_USER", "")
 SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD", "")
 
 # Enable logging
@@ -22,8 +23,9 @@ logging.basicConfig(format="%(asctime)s %(levelname)-8s %(message)s",
 
 def job():
     logging.info("Running job...")
-    smtp: SMTP = SMTP(smtp_url=SMTP_URL, smtp_port=SMTP_PORT,
-                      smtp_email=SMTP_EMAIL, smtp_password=SMTP_PASSWORD)
+    smtpOptions: SMTPOptions = SMTPOptions(
+        host=SMTP_HOST, port=SMTP_PORT, username=SMTP_USER, password=SMTP_PASSWORD)
+    smtp: SMTP = SMTP(smtp_options=smtpOptions)
     email_templates: EmailTemplates = EmailTemplates()
     legacyComApi: LegacyComApi = LegacyComApi()
 
@@ -31,30 +33,31 @@ def job():
         if len(legacyComApi.obituaries) == 0:
             logging.info("No new obituaries were found.")
         else:
-            subject: str = "{} obituaries have been found.".format(
-                str(len(legacyComApi.obituaries)))
-            body: str = email_templates.generate_basic_template(
-                dict(email_greeting=EMAIL_GREETING, obituaries=email_templates.generate_obituaries_body(
-                    legacyComApi.obituaries)))
-            smtp.send_email(from_email=FROM_EMAIL,
-                            to_email=TO_EMAIL, subject=subject, body=body)
-            logging.info(subject)
+            email: Email = Email(from_name=FROM_NAME, from_email=FROM_EMAIL, to_name=TO_NAME, to_email=TO_EMAIL,
+                                 subject=f"{str(len(legacyComApi.obituaries))} new obituaries have been found.",
+                                 body=email_templates.generate_basic_template(
+                                     dict(to_name=TO_NAME, obituaries=email_templates.generate_obituaries_body(
+                                         legacyComApi.obituaries))))
+            smtp.send_email(email=email)
+            logging.info(
+                f"{str(len(legacyComApi.obituaries))} obituaries have been found.")
 
     except LegacyComApiError as error:
-        subject: str = "check-obituaries.py encountered an error from Legacy.com"
-        body: str = email_templates.generate_error_template(
-            dict(email_greeting=EMAIL_GREETING, status_code=error.args[1]))
-        smtp.send_email(from_email=FROM_EMAIL, to_email=TO_EMAIL,
-                        subject=subject, body=body)
+        email: Email = Email(from_name=FROM_NAME, from_email=FROM_EMAIL, to_name=TO_NAME, to_email=TO_EMAIL,
+                             subject="check-obituaries.py encountered an error from Legacy.com",
+                             body=email_templates.generate_error_template(
+                                 dict(to_name=TO_NAME, status_code=error.args[1])))
+        smtp.send_email(email=email)
         logging.error(
-            "An error has occurred when making Legacy.com api call. API returned status code: {}".format(error.args[1]))
+            f"An error has occurred when making Legacy.com api call. API returned status code: {error.args[1]}")
     except LegacyComApiMissingParameterError as error:
         logging.error("Legacy.com API requires a first name or last name.")
 
     logging.info("Job finished.")
 
 
-schedule.every().day.at(SCRIPT_RUN_TIME).do(job)
+# schedule.every().day.at(SCRIPT_RUN_TIME).do(job)
+schedule.every(10).seconds.do(job)
 
 while True:
     schedule.run_pending()

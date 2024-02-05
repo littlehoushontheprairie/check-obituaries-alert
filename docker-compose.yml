@@ -3,7 +3,7 @@ version: "3.5"
 services:
   check_obituaries:
     container_name: check_obituaries
-    image: "check_obituaries/check_obituaries:latest"
+    image: "littlehoushontheprairie/check_obituaries:latest"
     restart: always
     network_mode: host
     build:
@@ -14,12 +14,13 @@ services:
       - 1.0.0.1
     environment:
       TZ: America/Los_Angeles
+      FROM_NAME: "${FROM_NAME}"
       FROM_EMAIL: "${FROM_EMAIL}"
+      TO_NAME: "${TO_NAME}"
       TO_EMAIL: "${TO_EMAIL}"
-      EMAIL_GREETING: "${EMAIL_GREETING}"
-      SMTP_URL: "${SMTP_URL}"
-      SMTP_PORT: "${SMTP_PORT}"
-      SMTP_EMAIL: "${SMTP_EMAIL}"
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: "${SMTP_USER}"
       SMTP_PASSWORD: "${SMTP_PASSWORD}"
     volumes:
       - /data:/data
