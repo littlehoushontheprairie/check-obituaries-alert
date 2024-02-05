@@ -57,8 +57,7 @@ def job():
     logging.info("Job finished.")
 
 
-# schedule.every().day.at(SCRIPT_RUN_TIME).do(job)
-schedule.every(10).seconds.do(job)
+schedule.every().day.at(SCRIPT_RUN_TIME).do(job)
 
 while True:
     schedule.run_pending()
