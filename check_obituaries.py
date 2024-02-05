@@ -7,10 +7,11 @@ from email_templates import EmailTemplates
 from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingParameterError
 
 SCRIPT_RUN_TIME: str = os.environ.get("SCRIPT_RUN_TIME", "13:00")
-FROM_NAME: str = os.environ.get("FROM_NAME", "Check Obituary Script")
+FROM_NAME: str = os.environ.get("FROM_NAME", "Check Obituaries Alert")
 FROM_EMAIL: str = os.environ.get("FROM_EMAIL", "")
 TO_NAME: str = os.environ.get("TO_NAME", "")
 TO_EMAIL: str = os.environ.get("TO_EMAIL", "")
+
 SMTP_HOST: str = os.environ.get("SMTP_HOST", "")
 SMTP_PORT: int = os.environ.get("SMTP_PORT", 465)
 SMTP_USER: str = os.environ.get("SMTP_USER", "")
