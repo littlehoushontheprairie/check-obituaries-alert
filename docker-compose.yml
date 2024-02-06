@@ -1,7 +1,7 @@
 version: "3.5"
 
 services:
-  check_obituaries:
+  check_obituaries_alert:
     container_name: check_obituaries_alert
     image: "littlehoushontheprairie/check_obituaries_alert:latest"
     restart: always
