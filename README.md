@@ -12,6 +12,72 @@ Need something that alerts you when they appear in an obituary? This script is w
 3. run docker-compose
     - `docker-compose up --build -d`
 
+#### Running Locally
+
+1. Download repo
+    - `git clone https://github.com/littlehoushontheprairie/check-obituaries-alert.git`
+    - `git checkout develop`
+    - `git pull`
+    - `cd check-obituaries-alert`
+2. Export environment variables
+3. Run
+    - `python3 check-obituaries-alert.py`
+
+#### Building and Running as Container from Source
+
+1. Download repo
+    - `git checkout develop`
+    - `git pull`
+    - `cd check-obituaries-alert`
+2. Export environment variables
+3. run docker-compose
+    - `docker-compose up --build -d`
+
+#### Running Container from GitHub Docker Registry (using Terminal)
+
+1. Download `latest` container
+    - `docker pull ghcr.io/littlehoushontheprairie/check-obituaries-alert:latest`
+2. Run container
+    - ```
+      docker run --restart=always -d --network host \
+      --name check-obituaries-alert \
+      -e TZ="America/Los_Angeles" \
+      -e FROM_EMAIL="from@example.com" \
+      -e TO_NAME="to" \
+      -e TO_EMAIL="to@example.com" \
+      -e SMTP_HOST="smtp.example.com" \
+      -e SMTP_USER="laura@example.com" \
+      -e SMTP_PASSWORD="8f5cd6729h0v5d247vc190ddcs4l2a" \
+      ghcr.io/littlehoushontheprairie/check-obituaries-alert:latest
+      ```
+
+#### Running Container from GitHub Docker Registry (using docker-compose)
+
+1. Create `docker-compose.yml` file
+2. Add content.
+
+    - ```
+      version: "3.5"
+
+      services:
+          check-obituaries-alert:
+              container_name: check-obituaries-alert
+              image: ghcr.io/littlehoushontheprairie/check-obituaries-alert:latest
+              restart: always
+              network_mode: host
+              environment:
+                  TZ: America/Los_Angeles
+                  FROM_EMAIL: "${FROM_EMAIL}"
+                  TO_NAME: "${TO_NAME}"
+                  TO_EMAIL: "${TO_EMAIL}"
+                  SMTP_HOST: "${SMTP_HOST}"
+                  SMTP_USER: "${SMTP_USER}"
+                  SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      ```
+
+3. Export environment variables
+4. Run `docker-compose up -d`
+
 ## Legacy.com API
 
 The script reads in a json file, [legacy_com_search_parameters.json](./legacy_com_search_parameters.json), which is a json object of names and location ids. The file should be located in `/data` and mapped correctly in the [docker-compose.yml](./docker-compose.yml#L25). Legacy.com API doesn't require all fields to be filled in. At least some need to be.

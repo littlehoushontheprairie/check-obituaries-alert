@@ -1,3 +1,4 @@
+import os
 from datetime import date, timedelta
 import requests
 import json
@@ -30,13 +31,19 @@ class LegacyComApiMissingParameterError(Exception):
 class LegacyComApi:
     def __init__(self):
         self.obituaries: list = []
-        
-        data: dict = {}
 
-        with open("/data/legacy_com_search_parameters.json", "r") as json_data:
-            data = json.load(json_data)
+        data: dict = {"searchParameters": []}
 
-        searchParameters: dict = data.get("searchParameters", {})
+        filePath: str = "/data/legacy_com_search_parameters.json"
+
+        if not os.path.exists(filePath):
+            with open(filePath, 'w') as file:
+                json.dump({"searchParameters": []}, file)
+        else:
+            with open(filePath, "r") as json_data:
+                data = json.load(json_data)
+
+        searchParameters: dict = data.get("searchParameters")
 
         today: str = date.today().isoformat()
         yesterday: str = (date.today() - timedelta(days=1)).isoformat()
