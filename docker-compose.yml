@@ -3,7 +3,7 @@ version: "3.5"
 services:
   check_obituaries_alert:
     container_name: check_obituaries_alert
-    image: "littlehoushontheprairie/check_obituaries_alert:latest"
+    image: ghcr.io/littlehoushontheprairie/check_obituaries_alert:latest
     restart: always
     network_mode: host
     build:
@@ -21,5 +21,5 @@ services:
       SMTP_USER: "${SMTP_USER}"
       SMTP_PASSWORD: "${SMTP_PASSWORD}"
     volumes:
-      - /Users/laura/docker/storage/data:/data
+      - /path/to/data:/data
   

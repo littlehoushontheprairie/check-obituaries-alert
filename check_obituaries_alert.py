@@ -8,14 +8,22 @@ from legacy_com_api import LegacyComApi, LegacyComApiError, LegacyComApiMissingP
 
 SCRIPT_RUN_TIME: str = os.environ.get("SCRIPT_RUN_TIME", "13:00")
 FROM_NAME: str = os.environ.get("FROM_NAME", "Check Obituaries Alert")
-FROM_EMAIL: str = os.environ.get("FROM_EMAIL", "")
+FROM_EMAIL: str = os.environ.get("FROM_EMAIL")
 TO_NAME: str = os.environ.get("TO_NAME", "")
-TO_EMAIL: str = os.environ.get("TO_EMAIL", "")
+TO_EMAIL: str = os.environ.get("TO_EMAIL")
 
-SMTP_HOST: str = os.environ.get("SMTP_HOST", "")
-SMTP_PORT: int = os.environ.get("SMTP_PORT", 465)
-SMTP_USER: str = os.environ.get("SMTP_USER", "")
-SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD", "")
+SMTP_HOST: str = os.environ.get("SMTP_HOST")
+SMTP_PORT: int = int(os.environ.get("SMTP_PORT", 465))
+SMTP_USER: str = os.environ.get("SMTP_USER")
+SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD")
+
+
+assert (FROM_EMAIL is None, "FROM_EMAIL is required.")
+assert (TO_EMAIL is None, "TO_EMAIL is required.")
+assert (SMTP_HOST is None, "SMTP_HOST is required.")
+assert (SMTP_USER is None, "SMTP_USER is required.")
+assert (SMTP_PASSWORD is None, "SMTP_PASSWORD is required.")
+
 
 # Enable logging
 logging.basicConfig(format="%(asctime)s %(levelname)-8s %(message)s",
