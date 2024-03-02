@@ -4,14 +4,6 @@ Need something that alerts you when they appear in an obituary? This script is w
 
 ## Setup
 
-1. Download repo
-    - `git checkout develop`
-    - `git pull`
-    - `cd check-obituaries-alert`
-2. Export environment variables
-3. run docker-compose
-    - `docker-compose up --build -d`
-
 #### Running Locally
 
 1. Download repo
