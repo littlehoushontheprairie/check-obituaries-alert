@@ -14,14 +14,12 @@ services:
       - 1.0.0.1
     environment:
       TZ: America/Los_Angeles
-      FROM_NAME: "${FROM_NAME}"
       FROM_EMAIL: "${FROM_EMAIL}"
       TO_NAME: "${TO_NAME}"
       TO_EMAIL: "${TO_EMAIL}"
       SMTP_HOST: "${SMTP_HOST}"
-      SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: "${SMTP_USER}"
       SMTP_PASSWORD: "${SMTP_PASSWORD}"
     volumes:
-      - /data:/data
+      - /Users/laura/docker/storage/data:/data
   
