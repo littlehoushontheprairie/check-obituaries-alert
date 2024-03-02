@@ -65,6 +65,8 @@ Need something that alerts you when they appear in an obituary? This script is w
                   SMTP_HOST: "${SMTP_HOST}"
                   SMTP_USER: "${SMTP_USER}"
                   SMTP_PASSWORD: "${SMTP_PASSWORD}"
+              volumes:
+                  - /path/to/data:/data
       ```
 
 3. Export environment variables
