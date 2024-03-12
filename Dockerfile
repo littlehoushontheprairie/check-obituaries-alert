@@ -11,4 +11,4 @@ COPY templates/error.html ./templates/error.html
 RUN chmod 0755 check_obituaries_alert.py legacy_com_api.py smtp.py email_templates.py templates/index.html templates/error.html 
 RUN pip install requests schedule
 
-CMD [ "python", "./check_obituaries_alert.py" ]
+CMD [ "python", "-Wignore", "./check_obituaries_alert.py" ]
