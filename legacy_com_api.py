@@ -16,7 +16,7 @@ cityId - City ID.
 
 """
 
-USER_AGENT: str = "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1"
+USER_AGENT: str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
 LEGACY_COM_API_BASE_URL: str = "https://www.legacy.com/api/_frontend/search?endDate={today}&startDate={yesterday}&firstName={first_name}&lastName={last_name}&session_id=&keyword=&limit=50&noticeType=all"
 
 
